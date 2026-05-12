@@ -5,94 +5,66 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Chandan Kumar — Flutter Developer</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script>
-  tailwind.config = {
-    theme: {
-      extend: {
-        fontFamily: { sans: ['Inter', 'sans-serif'] },
-        colors: {
-          brand: '#2563EB',
-        }
-      }
-    }
-  }
-</script>
 <style>
-  html { scroll-behavior: smooth; }
-  body { font-family: 'Inter', sans-serif; }
+  html { scroll-behavior: smooth; font-family: 'Inter', sans-serif; }
   .reveal { opacity: 0; transform: translateY(18px); transition: opacity .55s ease, transform .55s ease; }
   .reveal.show { opacity: 1; transform: none; }
+  .project-card:hover { border-color: #9CA3AF !important; }
+  .link-btn:hover { background: #F3F4F6 !important; }
+  #videoModal { display:none; position:fixed; inset:0; z-index:200; background:rgba(0,0,0,0.7); align-items:center; justify-content:center; }
+  #videoModal.open { display:flex; }
+  .modal-box { background:#fff; border-radius:16px; padding:24px; width:90%; max-width:760px; position:relative; }
+  #modalFrame { width:100%; aspect-ratio:16/9; border:none; border-radius:8px; }
+  #closeModal { position:absolute; top:12px; right:16px; background:none; border:none; font-size:22px; cursor:pointer; color:#6B7280; }
 </style>
 </head>
 <body class="bg-white text-gray-900 antialiased">
 
+<!-- VIDEO MODAL -->
+<div id="videoModal">
+  <div class="modal-box">
+    <button id="closeModal" onclick="closeVideo()">✕</button>
+    <p id="modalTitle" class="text-sm font-semibold text-gray-700 mb-3"></p>
+    <iframe id="modalFrame" allowfullscreen></iframe>
+  </div>
+</div>
+
 <!-- NAV -->
-<header class="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100">
+<header class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur border-b border-gray-100">
   <div class="max-w-5xl mx-auto px-6 flex items-center justify-between h-14">
-    <span class="font-semibold text-sm tracking-tight text-gray-900">Chandan Kumar</span>
+    <span class="font-semibold text-sm">Chandan Kumar</span>
     <nav class="hidden sm:flex items-center gap-7">
       <a href="#about"      class="text-xs text-gray-500 hover:text-gray-900 transition-colors uppercase tracking-widest">About</a>
       <a href="#experience" class="text-xs text-gray-500 hover:text-gray-900 transition-colors uppercase tracking-widest">Experience</a>
       <a href="#projects"   class="text-xs text-gray-500 hover:text-gray-900 transition-colors uppercase tracking-widest">Projects</a>
       <a href="#contact"    class="text-xs text-gray-500 hover:text-gray-900 transition-colors uppercase tracking-widest">Contact</a>
     </nav>
-    <a href="mailto:kumarchandan41u@gmail.com" class="text-xs bg-gray-900 text-white px-4 py-2 rounded hover:bg-gray-700 transition-colors">Hire me</a>
+    <a href="mailto:kumarchandan41u@gmail.com" class="text-xs bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition-colors">Hire me</a>
   </div>
 </header>
 
 <!-- HERO -->
-<section id="about" class="max-w-5xl mx-auto px-6 pt-36 pb-24">
+<section id="about" class="max-w-5xl mx-auto px-6 pt-36 pb-20">
   <div class="max-w-2xl">
     <p class="text-xs uppercase tracking-widest text-blue-600 font-medium mb-4">Flutter Developer · Full-Stack · Pune, India</p>
-    <h1 class="text-5xl sm:text-6xl font-bold text-gray-900 leading-tight tracking-tight mb-6">
-      Chandan Kumar
-    </h1>
+    <h1 class="text-5xl sm:text-6xl font-bold leading-tight tracking-tight mb-5">Chandan Kumar</h1>
     <p class="text-lg text-gray-500 leading-relaxed mb-8">
-      Flutter developer with <span class="text-gray-900 font-medium">3+ years</span> of experience building cross-platform apps across fintech, fleet management, and education. Currently building <span class="text-gray-900 font-medium">SwipeLoan</span> — a fully paperless digital lending marketplace connecting borrowers with NBFCs.
+      Flutter developer with <span class="text-gray-900 font-semibold">3+ years</span> of experience building cross-platform apps across fintech, fleet management, and education. Currently building <span class="text-gray-900 font-semibold">SwipeLoan</span> — a fully paperless digital lending marketplace connecting borrowers with NBFCs.
     </p>
-    <div class="flex flex-wrap gap-2 mb-10">
-      <span class="text-xs px-3 py-1.5 rounded-full border border-gray-200 text-gray-600">Flutter · Dart</span>
-      <span class="text-xs px-3 py-1.5 rounded-full border border-gray-200 text-gray-600">FastAPI · REST APIs</span>
-      <span class="text-xs px-3 py-1.5 rounded-full border border-gray-200 text-gray-600">Firebase · WebSocket</span>
-      <span class="text-xs px-3 py-1.5 rounded-full border border-gray-200 text-gray-600">Bloc · Riverpod · Provider</span>
-      <span class="text-xs px-3 py-1.5 rounded-full border border-gray-200 text-gray-600">Play Store · App Store</span>
-    </div>
+    <div class="flex flex-wrap gap-2 mb-9" id="badgesContainer"></div>
     <div class="flex gap-3">
-      <a href="#projects" class="text-sm bg-gray-900 text-white px-6 py-2.5 rounded hover:bg-gray-700 transition-colors font-medium">View Projects</a>
-      <a href="#contact"  class="text-sm border border-gray-300 text-gray-700 px-6 py-2.5 rounded hover:border-gray-500 transition-colors font-medium">Get in Touch</a>
+      <a href="#projects" class="text-sm bg-gray-900 text-white px-6 py-2.5 rounded-md font-medium hover:bg-gray-700 transition-colors">View Projects</a>
+      <a href="#contact"  class="text-sm border border-gray-200 text-gray-700 px-6 py-2.5 rounded-md font-medium hover:border-gray-400 transition-colors">Get in Touch</a>
     </div>
   </div>
 </section>
 
-<!-- DIVIDER -->
 <div class="border-t border-gray-100"></div>
 
 <!-- STATS -->
-<section class="max-w-5xl mx-auto px-6 py-14">
-  <div class="grid grid-cols-2 sm:grid-cols-5 gap-8">
-    <div class="reveal text-center">
-      <p class="text-3xl font-bold text-gray-900 mb-1">3+</p>
-      <p class="text-xs text-gray-400 uppercase tracking-widest">Years Exp</p>
-    </div>
-    <div class="reveal text-center">
-      <p class="text-3xl font-bold text-gray-900 mb-1">8+</p>
-      <p class="text-xs text-gray-400 uppercase tracking-widest">Apps Shipped</p>
-    </div>
-    <div class="reveal text-center">
-      <p class="text-3xl font-bold text-gray-900 mb-1">4</p>
-      <p class="text-xs text-gray-400 uppercase tracking-widest">Companies</p>
-    </div>
-    <div class="reveal text-center">
-      <p class="text-3xl font-bold text-gray-900 mb-1">70%</p>
-      <p class="text-xs text-gray-400 uppercase tracking-widest">Manual Work Cut</p>
-    </div>
-    <div class="reveal text-center">
-      <p class="text-3xl font-bold text-gray-900 mb-1">40%</p>
-      <p class="text-xs text-gray-400 uppercase tracking-widest">Load Time Saved</p>
-    </div>
-  </div>
+<section class="max-w-5xl mx-auto px-6 py-12">
+  <div id="statsContainer" class="grid grid-cols-2 sm:grid-cols-5 border border-gray-200 rounded-xl overflow-hidden"></div>
 </section>
 
 <div class="border-t border-gray-100"></div>
@@ -100,77 +72,7 @@
 <!-- EXPERIENCE -->
 <section id="experience" class="max-w-5xl mx-auto px-6 py-16">
   <p class="text-xs uppercase tracking-widest text-gray-400 font-medium mb-10">Experience</p>
-
-  <div class="space-y-0 divide-y divide-gray-100">
-
-    <!-- SwipeLoan -->
-    <div class="reveal py-8 grid sm:grid-cols-4 gap-4 sm:gap-8">
-      <div class="sm:col-span-1">
-        <p class="text-xs text-gray-400 mb-1">Dec 2025 – Present</p>
-        <p class="text-xs text-gray-400">Remote</p>
-      </div>
-      <div class="sm:col-span-3">
-        <p class="font-semibold text-gray-900 mb-0.5">Flutter Developer</p>
-        <p class="text-sm text-blue-600 mb-3">SwipeLoan — swipeloan.in</p>
-        <ul class="space-y-1.5 text-sm text-gray-500">
-          <li class="flex gap-2"><span class="text-gray-300 mt-1">—</span>Built end-to-end digital lending app connecting borrowers with registered NBFCs, supporting instant loan approvals (₹1,000–₹1,00,000) with 91–365 day repayment tenures</li>
-          <li class="flex gap-2"><span class="text-gray-300 mt-1">—</span>Implemented 100% paperless KYC onboarding (PAN, ID/address proof), real-time loan status tracking, and secure Razorpay payment integration</li>
-          <li class="flex gap-2"><span class="text-gray-300 mt-1">—</span>Delivered seamless digital-first lending experience from application to disbursal</li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- Avaronn -->
-    <div class="reveal py-8 grid sm:grid-cols-4 gap-4 sm:gap-8">
-      <div class="sm:col-span-1">
-        <p class="text-xs text-gray-400 mb-1">Feb 2025 – Present</p>
-        <p class="text-xs text-gray-400">Noida</p>
-      </div>
-      <div class="sm:col-span-3">
-        <p class="font-semibold text-gray-900 mb-0.5">Flutter Developer</p>
-        <p class="text-sm text-blue-600 mb-3">Avaronn Technology Pvt Ltd</p>
-        <ul class="space-y-1.5 text-sm text-gray-500">
-          <li class="flex gap-2"><span class="text-gray-300 mt-1">—</span>Architected and deployed 4 cross-platform Flutter apps — Fleetwise Owner, Fleetwise Saarthi, RentWise, ClientWise — for fleet management, driver guidance, vehicle rental, and delivery scheduling</li>
-          <li class="flex gap-2"><span class="text-gray-300 mt-1">—</span>Implemented real-time driver-trip mapping, automated performance tracking, and dynamic route optimization, reducing manual intervention by 70%</li>
-          <li class="flex gap-2"><span class="text-gray-300 mt-1">—</span>Integrated Firebase, REST APIs, and Bloc/Riverpod for real-time tracking, push notifications, and multi-role data sync</li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- Coderoofs -->
-    <div class="reveal py-8 grid sm:grid-cols-4 gap-4 sm:gap-8">
-      <div class="sm:col-span-1">
-        <p class="text-xs text-gray-400 mb-1">Sep 2023 – Feb 2025</p>
-        <p class="text-xs text-gray-400">Mohali, Punjab</p>
-      </div>
-      <div class="sm:col-span-3">
-        <p class="font-semibold text-gray-900 mb-0.5">Flutter Developer</p>
-        <p class="text-sm text-blue-600 mb-3">Coderoofs IT Solutions</p>
-        <ul class="space-y-1.5 text-sm text-gray-500">
-          <li class="flex gap-2"><span class="text-gray-300 mt-1">—</span>Developed 3 production-ready apps for education and coaching sectors with intuitive UI/UX, improving user engagement and stability</li>
-          <li class="flex gap-2"><span class="text-gray-300 mt-1">—</span>Optimized performance via code refactoring and efficient state management, reducing load times by 40%</li>
-          <li class="flex gap-2"><span class="text-gray-300 mt-1">—</span>Modernized codebase using Flutter best practices and updated framework versions</li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- Nextgen -->
-    <div class="reveal py-8 grid sm:grid-cols-4 gap-4 sm:gap-8">
-      <div class="sm:col-span-1">
-        <p class="text-xs text-gray-400 mb-1">Mar 2023 – Jul 2023</p>
-        <p class="text-xs text-gray-400">Mumbai, Maharashtra</p>
-      </div>
-      <div class="sm:col-span-3">
-        <p class="font-semibold text-gray-900 mb-0.5">Flutter Developer</p>
-        <p class="text-sm text-blue-600 mb-3">Nextgen Techno Ventures Pvt Ltd</p>
-        <ul class="space-y-1.5 text-sm text-gray-500">
-          <li class="flex gap-2"><span class="text-gray-300 mt-1">—</span>Led API integration and feature development for Green India Retail project</li>
-          <li class="flex gap-2"><span class="text-gray-300 mt-1">—</span>Enhanced app efficiency through strategic code optimizations, improving UX and load performance</li>
-        </ul>
-      </div>
-    </div>
-
-  </div>
+  <div id="expContainer"></div>
 </section>
 
 <div class="border-t border-gray-100"></div>
@@ -178,72 +80,7 @@
 <!-- PROJECTS -->
 <section id="projects" class="max-w-5xl mx-auto px-6 py-16">
   <p class="text-xs uppercase tracking-widest text-gray-400 font-medium mb-10">Projects</p>
-
-  <div class="grid sm:grid-cols-2 gap-5">
-
-    <div class="reveal border border-gray-200 rounded-xl p-6 hover:border-gray-400 transition-colors">
-      <div class="flex items-start justify-between mb-3">
-        <p class="text-xs text-gray-400 uppercase tracking-widest">Fintech</p>
-        <a href="https://swipeloan.in" target="_blank" class="text-xs text-blue-600 hover:underline">swipeloan.in ↗</a>
-      </div>
-      <h3 class="font-semibold text-gray-900 mb-2">SwipeLoan</h3>
-      <p class="text-sm text-gray-500 leading-relaxed mb-4">Digital lending marketplace on Google Play. Instant loan approvals (₹1K–₹1L) via registered NBFCs with fully paperless KYC, real-time tracking, and Razorpay payment integration.</p>
-      <div class="flex flex-wrap gap-1.5">
-        <span class="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">Flutter</span>
-        <span class="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">Dart</span>
-        <span class="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">Firebase</span>
-        <span class="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">Razorpay</span>
-        <span class="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">Bloc</span>
-        <span class="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">REST APIs</span>
-      </div>
-    </div>
-
-    <div class="reveal border border-gray-200 rounded-xl p-6 hover:border-gray-400 transition-colors">
-      <div class="flex items-start justify-between mb-3">
-        <p class="text-xs text-gray-400 uppercase tracking-widest">Fleet Management</p>
-      </div>
-      <h3 class="font-semibold text-gray-900 mb-2">Fleetwise Owner</h3>
-      <p class="text-sm text-gray-500 leading-relaxed mb-4">Fleet OS with real-time driver-trip mapping, automated performance tracking, and dual-mode execution (scheduled + on-demand). Reduced manual intervention by 70%.</p>
-      <div class="flex flex-wrap gap-1.5">
-        <span class="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">Flutter</span>
-        <span class="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">Dart</span>
-        <span class="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">Firebase</span>
-        <span class="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">Bloc</span>
-        <span class="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">REST APIs</span>
-      </div>
-    </div>
-
-    <div class="reveal border border-gray-200 rounded-xl p-6 hover:border-gray-400 transition-colors">
-      <div class="flex items-start justify-between mb-3">
-        <p class="text-xs text-gray-400 uppercase tracking-widest">Driver App</p>
-      </div>
-      <h3 class="font-semibold text-gray-900 mb-2">Fleetwise Saarthi</h3>
-      <p class="text-sm text-gray-500 leading-relaxed mb-4">Smart driver guidance app with real-time route instructions, automated attendance and professionalism tracking. Achieved 95%+ on-time execution rates.</p>
-      <div class="flex flex-wrap gap-1.5">
-        <span class="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">Flutter</span>
-        <span class="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">Dart</span>
-        <span class="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">Google Maps API</span>
-        <span class="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">Provider</span>
-        <span class="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">Firebase</span>
-      </div>
-    </div>
-
-    <div class="reveal border border-gray-200 rounded-xl p-6 hover:border-gray-400 transition-colors">
-      <div class="flex items-start justify-between mb-3">
-        <p class="text-xs text-gray-400 uppercase tracking-widest">Logistics</p>
-      </div>
-      <h3 class="font-semibold text-gray-900 mb-2">ClientWise</h3>
-      <p class="text-sm text-gray-500 leading-relaxed mb-4">Delivery scheduling platform with intelligent route optimization and real-time tracking. Reduced delivery costs by 30% and provides accurate live ETAs.</p>
-      <div class="flex flex-wrap gap-1.5">
-        <span class="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">Flutter</span>
-        <span class="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">Dart</span>
-        <span class="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">Google Maps API</span>
-        <span class="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">Firebase</span>
-        <span class="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">Dio</span>
-      </div>
-    </div>
-
-  </div>
+  <div id="projectsContainer" class="grid sm:grid-cols-2 gap-5"></div>
 </section>
 
 <div class="border-t border-gray-100"></div>
@@ -251,39 +88,7 @@
 <!-- SKILLS -->
 <section class="max-w-5xl mx-auto px-6 py-16">
   <p class="text-xs uppercase tracking-widest text-gray-400 font-medium mb-10">Skills</p>
-  <div class="grid sm:grid-cols-3 gap-y-8 gap-x-12">
-
-    <div class="reveal">
-      <p class="text-xs font-semibold text-gray-900 uppercase tracking-widest mb-3">Languages</p>
-      <p class="text-sm text-gray-500 leading-relaxed">Dart, Java, Python, JavaScript, SQL</p>
-    </div>
-
-    <div class="reveal">
-      <p class="text-xs font-semibold text-gray-900 uppercase tracking-widest mb-3">Flutter & Mobile</p>
-      <p class="text-sm text-gray-500 leading-relaxed">Flutter SDK, Android / iOS, Material Design, Cupertino, Custom Animations</p>
-    </div>
-
-    <div class="reveal">
-      <p class="text-xs font-semibold text-gray-900 uppercase tracking-widest mb-3">State Management</p>
-      <p class="text-sm text-gray-500 leading-relaxed">Bloc, Riverpod, Provider, GetX</p>
-    </div>
-
-    <div class="reveal">
-      <p class="text-xs font-semibold text-gray-900 uppercase tracking-widest mb-3">Backend & APIs</p>
-      <p class="text-sm text-gray-500 leading-relaxed">REST APIs, FastAPI, Dio, HTTP, WebSocket, PostgreSQL, MySQL, Firebase</p>
-    </div>
-
-    <div class="reveal">
-      <p class="text-xs font-semibold text-gray-900 uppercase tracking-widest mb-3">Integrations</p>
-      <p class="text-sm text-gray-500 leading-relaxed">Razorpay, Google Maps API, FCM, Firebase Auth, Firestore</p>
-    </div>
-
-    <div class="reveal">
-      <p class="text-xs font-semibold text-gray-900 uppercase tracking-widest mb-3">Tools & Deployment</p>
-      <p class="text-sm text-gray-500 leading-relaxed">Git, Android Studio, VS Code, CI/CD, Play Store, App Store</p>
-    </div>
-
-  </div>
+  <div id="skillsContainer" class="grid sm:grid-cols-3 gap-x-12 gap-y-8"></div>
 </section>
 
 <div class="border-t border-gray-100"></div>
@@ -291,15 +96,7 @@
 <!-- EDUCATION -->
 <section class="max-w-5xl mx-auto px-6 py-16">
   <p class="text-xs uppercase tracking-widest text-gray-400 font-medium mb-10">Education</p>
-  <div class="reveal grid sm:grid-cols-4 gap-4 sm:gap-8">
-    <div class="sm:col-span-1">
-      <p class="text-xs text-gray-400">Aug 2019 – Jul 2023</p>
-    </div>
-    <div class="sm:col-span-3">
-      <p class="font-semibold text-gray-900 mb-0.5">B.Tech in Computer Science Engineering</p>
-      <p class="text-sm text-blue-600">Indo Global College of Engineering, Chandigarh</p>
-    </div>
-  </div>
+  <div id="eduContainer"></div>
 </section>
 
 <div class="border-t border-gray-100"></div>
@@ -307,53 +104,294 @@
 <!-- CONTACT -->
 <section id="contact" class="max-w-5xl mx-auto px-6 py-16">
   <p class="text-xs uppercase tracking-widest text-gray-400 font-medium mb-3">Contact</p>
-  <p class="text-2xl font-semibold text-gray-900 mb-8 leading-snug max-w-md">Open to new opportunities.<br>Let's build something great.</p>
-
-  <div class="grid sm:grid-cols-2 gap-3 max-w-lg">
-    <a href="tel:+919525443159" class="reveal flex items-center gap-3 border border-gray-200 rounded-lg px-4 py-3 hover:border-gray-400 transition-colors">
-      <span class="text-gray-400 text-sm">📞</span>
-      <div>
-        <p class="text-xs text-gray-400 mb-0.5">Phone</p>
-        <p class="text-sm text-gray-700 font-medium">+91 95254 43159</p>
-      </div>
-    </a>
-    <a href="mailto:kumarchandan41u@gmail.com" class="reveal flex items-center gap-3 border border-gray-200 rounded-lg px-4 py-3 hover:border-gray-400 transition-colors">
-      <span class="text-gray-400 text-sm">✉</span>
-      <div>
-        <p class="text-xs text-gray-400 mb-0.5">Email</p>
-        <p class="text-sm text-gray-700 font-medium">kumarchandan41u@gmail.com</p>
-      </div>
-    </a>
-    <a href="https://linkedin.com/in/chandan-kumar-y" target="_blank" class="reveal flex items-center gap-3 border border-gray-200 rounded-lg px-4 py-3 hover:border-gray-400 transition-colors">
-      <span class="text-gray-400 text-sm font-bold">in</span>
-      <div>
-        <p class="text-xs text-gray-400 mb-0.5">LinkedIn</p>
-        <p class="text-sm text-gray-700 font-medium">chandan-kumar-y</p>
-      </div>
-    </a>
-    <a href="https://github.com/chandan0000" target="_blank" class="reveal flex items-center gap-3 border border-gray-200 rounded-lg px-4 py-3 hover:border-gray-400 transition-colors">
-      <span class="text-gray-400 text-sm font-bold">gh</span>
-      <div>
-        <p class="text-xs text-gray-400 mb-0.5">GitHub</p>
-        <p class="text-sm text-gray-700 font-medium">chandan0000</p>
-      </div>
-    </a>
-  </div>
+  <p class="text-2xl font-semibold text-gray-900 mb-8 leading-snug max-w-sm">Open to new opportunities.<br>Let's build something great.</p>
+  <div id="contactContainer" class="grid sm:grid-cols-2 gap-3 max-w-lg"></div>
 </section>
 
 <!-- FOOTER -->
 <footer class="border-t border-gray-100">
-  <div class="max-w-5xl mx-auto px-6 py-6 flex items-center justify-between flex-wrap gap-3">
+  <div class="max-w-5xl mx-auto px-6 py-5 flex items-center justify-between flex-wrap gap-3">
     <p class="text-xs text-gray-400">© 2025 Chandan Kumar</p>
     <p class="text-xs text-gray-400">Flutter Developer · Pune, India</p>
   </div>
 </footer>
 
 <script>
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('show'); });
-  }, { threshold: 0.08 });
-  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+/* ============================================================
+   ✅ YAHAN SAB DATA HAI — SIRF YAHAN EDIT KARO
+   ============================================================ */
+
+const BADGES = [
+  "Flutter · Dart",
+  "FastAPI · REST APIs",
+  "Firebase · WebSocket",
+  "Bloc · Riverpod · Provider",
+  "Play Store · App Store",
+];
+
+const STATS = [
+  { value: "3+",  label: "Years Exp" },
+  { value: "8+",  label: "Apps Shipped" },
+  { value: "4",   label: "Companies" },
+  { value: "70%", label: "Manual Work Cut" },
+  { value: "40%", label: "Load Time Saved" },
+];
+
+const EXPERIENCE = [
+  {
+    role:     "Flutter Developer",
+    company:  "SwipeLoan — swipeloan.in",
+    period:   "Dec 2025 – Present",
+    location: "Remote",
+    bullets: [
+      "Built end-to-end digital lending app connecting borrowers with registered NBFCs, supporting instant loan approvals (₹1,000–₹1,00,000) with 91–365 day repayment tenures",
+      "Implemented 100% paperless KYC onboarding (PAN, ID/address proof), real-time loan status tracking, and secure Razorpay payment integration",
+      "Delivered seamless digital-first lending experience from application to disbursal",
+    ],
+  },
+  {
+    role:     "Flutter Developer",
+    company:  "Avaronn Technology Pvt Ltd",
+    period:   "Feb 2025 – Present",
+    location: "Noida",
+    bullets: [
+      "Architected and deployed 4 cross-platform Flutter apps — Fleetwise Owner, Fleetwise Saarthi, RentWise, ClientWise — for fleet management, driver guidance, vehicle rental, and delivery scheduling",
+      "Implemented real-time driver-trip mapping, automated performance tracking, and dynamic route optimization, reducing manual intervention by 70%",
+      "Integrated Firebase, REST APIs, and Bloc/Riverpod for real-time tracking, push notifications, and multi-role data sync",
+    ],
+  },
+  {
+    role:     "Flutter Developer",
+    company:  "Coderoofs IT Solutions",
+    period:   "Sep 2023 – Feb 2025",
+    location: "Mohali, Punjab",
+    bullets: [
+      "Developed 3 production-ready apps for education and coaching sectors with intuitive UI/UX, improving user engagement and stability",
+      "Optimized performance via code refactoring and efficient state management, reducing load times by 40%",
+      "Modernized codebase using Flutter best practices and updated framework versions",
+    ],
+  },
+  {
+    role:     "Flutter Developer",
+    company:  "Nextgen Techno Ventures Pvt Ltd",
+    period:   "Mar 2023 – Jul 2023",
+    location: "Mumbai, Maharashtra",
+    bullets: [
+      "Led API integration and feature development for Green India Retail project",
+      "Enhanced app efficiency through strategic code optimizations, improving UX and load performance",
+    ],
+  },
+];
+
+/* ── PROJECTS ──────────────────────────────────────────────
+   status options : "live" | "development" | "private"
+   playstore      : Play Store URL — "" agar nahi hai
+   website        : Website URL   — "" agar nahi hai
+   video          : Google Drive video link — "" agar nahi hai
+                    (drive.google.com/file/d/FILE_ID/view)
+   stack          : Array of tech tags
+   ─────────────────────────────────────────────────────── */
+const PROJECTS = [
+  {
+    category: "Fintech",
+    name:     "SwipeLoan",
+    status:   "live",
+    desc:     "Digital lending marketplace connecting borrowers with registered NBFCs. Instant loan approvals (₹1K–₹1L), 100% paperless KYC, real-time status tracking, and Razorpay integration.",
+    playstore: "https://play.google.com/store/apps/details?id=YOUR_PACKAGE_NAME",
+    website:   "https://swipeloan.in",
+    video:     "",  // "https://drive.google.com/file/d/FILE_ID/view"
+    stack:    ["Flutter", "Dart", "Firebase", "Razorpay", "Bloc", "REST APIs"],
+  },
+  {
+    category: "Fleet Management",
+    name:     "Fleetwise Owner",
+    status:   "live",
+    desc:     "Fleet OS with real-time driver-trip mapping, automated performance tracking, and dual-mode execution (scheduled + on-demand). Reduced manual intervention by 70%.",
+    playstore: "https://play.google.com/store/apps/details?id=YOUR_PACKAGE_NAME",
+    website:   "",
+    video:     "",  // "https://drive.google.com/file/d/FILE_ID/view"
+    stack:    ["Flutter", "Dart", "Firebase", "Bloc", "REST APIs"],
+  },
+  {
+    category: "Driver App",
+    name:     "Fleetwise Saarthi",
+    status:   "live",
+    desc:     "Smart driver guidance app with real-time route instructions, automated attendance and professionalism tracking. Achieved 95%+ on-time execution rates.",
+    playstore: "https://play.google.com/store/apps/details?id=YOUR_PACKAGE_NAME",
+    website:   "",
+    video:     "",  // "https://drive.google.com/file/d/FILE_ID/view"
+    stack:    ["Flutter", "Dart", "Google Maps API", "Provider", "Firebase"],
+  },
+  {
+    category: "Logistics",
+    name:     "ClientWise",
+    status:   "live",
+    desc:     "Delivery scheduling platform with intelligent route optimization and real-time tracking. Reduced delivery costs by 30% and provides accurate live ETAs.",
+    playstore: "https://play.google.com/store/apps/details?id=YOUR_PACKAGE_NAME",
+    website:   "",
+    video:     "",  // "https://drive.google.com/file/d/FILE_ID/view"
+    stack:    ["Flutter", "Dart", "Google Maps API", "Firebase", "Dio"],
+  },
+  // ── NAY PROJECT ADD KARNA HO TO YAHAN COPY-PASTE KARO ──
+  // {
+  //   category: "Category",
+  //   name:     "App Name",
+  //   status:   "live",           // "live" | "development" | "private"
+  //   desc:     "Description...",
+  //   playstore: "",
+  //   website:   "",
+  //   video:     "",
+  //   stack:    ["Flutter", "Dart"],
+  // },
+];
+
+const SKILLS = [
+  { label: "Languages",        value: "Dart, Java, Python, JavaScript, SQL" },
+  { label: "Flutter & Mobile", value: "Flutter SDK, Android / iOS, Material Design, Cupertino, Custom Animations" },
+  { label: "State Management", value: "Bloc, Riverpod, Provider, GetX" },
+  { label: "Backend & APIs",   value: "REST APIs, FastAPI, Dio, HTTP, WebSocket, PostgreSQL, MySQL, Firebase" },
+  { label: "Integrations",     value: "Razorpay, Google Maps API, FCM, Firebase Auth, Firestore" },
+  { label: "Tools & Deploy",   value: "Git, Android Studio, VS Code, CI/CD, Play Store, App Store" },
+];
+
+const EDUCATION = [
+  {
+    degree:  "B.Tech in Computer Science Engineering",
+    college: "Indo Global College of Engineering, Chandigarh",
+    period:  "Aug 2019 – Jul 2023",
+  },
+];
+
+const CONTACT = [
+  { icon: "📞", label: "Phone",    value: "+91 95254 43159",          href: "tel:+919525443159" },
+  { icon: "✉",  label: "Email",    value: "kumarchandan41u@gmail.com", href: "mailto:kumarchandan41u@gmail.com" },
+  { icon: "in", label: "LinkedIn", value: "chandan-kumar-y",           href: "https://linkedin.com/in/chandan-kumar-y" },
+  { icon: "gh", label: "GitHub",   value: "chandan0000",               href: "https://github.com/chandan0000" },
+];
+
+/* ============================================================
+   RENDERER — NEECHE KUCH EDIT KARNE KI ZAROORAT NAHI
+   ============================================================ */
+
+// Badges
+document.getElementById("badgesContainer").innerHTML =
+  BADGES.map(b => `<span class="text-xs px-3 py-1.5 rounded-full border border-gray-200 text-gray-600">${b}</span>`).join("");
+
+// Stats
+document.getElementById("statsContainer").innerHTML =
+  STATS.map((s, i) => `
+    <div class="reveal text-center py-7 px-4 ${i < STATS.length - 1 ? "border-r border-gray-200" : ""}">
+      <p class="text-3xl font-bold mb-1">${s.value}</p>
+      <p class="text-xs text-gray-400 uppercase tracking-widest">${s.label}</p>
+    </div>`).join("");
+
+// Experience
+document.getElementById("expContainer").innerHTML =
+  EXPERIENCE.map(e => `
+    <div class="reveal grid sm:grid-cols-4 gap-6 sm:gap-10 py-8 border-t border-gray-100">
+      <div><p class="text-xs text-gray-400 mb-1">${e.period}</p><p class="text-xs text-gray-400">${e.location}</p></div>
+      <div class="sm:col-span-3">
+        <p class="font-semibold text-gray-900 mb-0.5">${e.role}</p>
+        <p class="text-sm text-blue-600 mb-3">${e.company}</p>
+        <ul class="space-y-2 text-sm text-gray-500">
+          ${e.bullets.map(b => `<li class="flex gap-2"><span class="text-gray-300 mt-0.5 shrink-0">—</span><span>${b}</span></li>`).join("")}
+        </ul>
+      </div>
+    </div>`).join("");
+
+// Status badge helper
+function statusBadge(status) {
+  const map = {
+    live:        { cls: "bg-green-50 text-green-600 border-green-100", label: "Live" },
+    development: { cls: "bg-yellow-50 text-yellow-600 border-yellow-100", label: "In Development" },
+    private:     { cls: "bg-gray-100 text-gray-500 border-gray-200", label: "Private" },
+  };
+  const s = map[status] || map.private;
+  return `<span class="text-xs px-2.5 py-0.5 rounded-full font-medium border ${s.cls}">${s.label}</span>`;
+}
+
+// Play Store icon SVG
+const playSVG = `<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" class="text-green-500 shrink-0">
+  <path d="M3 20.5v-17c0-.83 1-.98 1.44-.37L13 12l-8.56 8.87C4 21.48 3 21.33 3 20.5zm10.73-8.5-1.98-1.98L5.04 20.09 13.73 12zm3.55-3.5-2.21-1.28-2.17 2.17 2.17 2.17 2.23-1.3c.63-.36.63-1.4-.02-1.76zm-8.24-4.59 1.98 1.98 1.54-1.54-8.6-5-.92 4.56z"/>
+</svg>`;
+
+// Projects
+document.getElementById("projectsContainer").innerHTML =
+  PROJECTS.map(p => {
+    const btns = [];
+    if (p.playstore)
+      btns.push(`<a href="${p.playstore}" target="_blank" class="link-btn flex items-center gap-1.5 text-xs text-gray-600 border border-gray-200 px-3 py-1.5 rounded-md transition-colors duration-150 no-underline">${playSVG} Play Store</a>`);
+    if (p.website)
+      btns.push(`<a href="${p.website}" target="_blank" class="link-btn flex items-center gap-1.5 text-xs text-gray-600 border border-gray-200 px-3 py-1.5 rounded-md transition-colors duration-150 no-underline">🌐 Website</a>`);
+    if (p.video)
+      btns.push(`<button onclick="openVideo('${p.video}','${p.name} — Demo')" class="link-btn flex items-center gap-1.5 text-xs text-gray-600 border border-gray-200 px-3 py-1.5 rounded-md transition-colors duration-150 cursor-pointer bg-white">▶ Demo Video</button>`);
+
+    return `
+    <div class="project-card reveal border border-gray-200 rounded-xl p-5 transition-colors duration-200">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-xs text-gray-400 uppercase tracking-widest font-medium">${p.category}</span>
+        ${statusBadge(p.status)}
+      </div>
+      <h3 class="font-semibold text-gray-900 text-base mb-1.5">${p.name}</h3>
+      <p class="text-sm text-gray-500 leading-relaxed mb-4">${p.desc}</p>
+      <div class="flex flex-wrap gap-1.5 mb-4">
+        ${p.stack.map(t => `<span class="text-xs px-2 py-0.5 bg-gray-100 text-gray-500 rounded">${t}</span>`).join("")}
+      </div>
+      ${btns.length ? `<div class="flex flex-wrap gap-2 pt-3 border-t border-gray-100">${btns.join("")}</div>` : ""}
+    </div>`;
+  }).join("");
+
+// Skills
+document.getElementById("skillsContainer").innerHTML =
+  SKILLS.map(s => `
+    <div class="reveal">
+      <p class="text-xs font-semibold text-gray-900 uppercase tracking-widest mb-2">${s.label}</p>
+      <p class="text-sm text-gray-500 leading-relaxed">${s.value}</p>
+    </div>`).join("");
+
+// Education
+document.getElementById("eduContainer").innerHTML =
+  EDUCATION.map(e => `
+    <div class="reveal grid sm:grid-cols-4 gap-6 sm:gap-10">
+      <p class="text-xs text-gray-400">${e.period}</p>
+      <div class="sm:col-span-3">
+        <p class="font-semibold text-gray-900 mb-1">${e.degree}</p>
+        <p class="text-sm text-blue-600">${e.college}</p>
+      </div>
+    </div>`).join("");
+
+// Contact
+document.getElementById("contactContainer").innerHTML =
+  CONTACT.map(c => `
+    <a href="${c.href}" ${c.href.startsWith("http") ? 'target="_blank"' : ""} class="reveal flex items-center gap-3 border border-gray-200 rounded-xl px-4 py-3 hover:border-gray-400 transition-colors no-underline">
+      <span class="text-sm font-bold text-gray-500 min-w-[18px] text-center">${c.icon}</span>
+      <div>
+        <p class="text-xs text-gray-400 mb-0.5">${c.label}</p>
+        <p class="text-sm text-gray-700 font-medium">${c.value}</p>
+      </div>
+    </a>`).join("");
+
+// ── SCROLL REVEAL ──
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("show"); });
+}, { threshold: 0.08 });
+document.querySelectorAll(".reveal").forEach(el => revealObs.observe(el));
+
+// ── VIDEO MODAL ──
+function openVideo(url, title) {
+  const embed = url.replace("/view", "/preview").replace("/edit", "/preview");
+  document.getElementById("modalFrame").src = embed;
+  document.getElementById("modalTitle").textContent = title;
+  document.getElementById("videoModal").classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+function closeVideo() {
+  document.getElementById("videoModal").classList.remove("open");
+  document.getElementById("modalFrame").src = "";
+  document.body.style.overflow = "";
+}
+document.getElementById("videoModal").addEventListener("click", e => { if (e.target === e.currentTarget) closeVideo(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeVideo(); });
 </script>
 </body>
 </html>
